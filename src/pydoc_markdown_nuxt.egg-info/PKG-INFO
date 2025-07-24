@@ -1,0 +1,23 @@
+Metadata-Version: 2.4
+Name: pydoc-markdown-nuxt
+Version: 0.1.0
+Summary: A Nuxt.js plugin for rendering Python documentation with pydoc-markdown
+Author-email: Uriel Curiel <urielcuriel@outlook.com>
+License: MIT
+Keywords: pydoc-markdown,nuxt,documentation,python
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Framework :: Nuxt
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: pydoc-markdown>=4.8.2
+
+# pydoc-markdown-nuxt
+pydoc-markdown render for nuxt content
