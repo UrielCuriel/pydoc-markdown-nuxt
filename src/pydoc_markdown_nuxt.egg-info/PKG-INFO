@@ -20,7 +20,11 @@ Classifier: Topic :: Software Development :: Documentation
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 Requires-Dist: pydoc-markdown>=4.8.2
+Requires-Dist: pytest>=8.3.5
 Requires-Dist: PyYAML>=5.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
 
 # pydoc-markdown-nuxt
 

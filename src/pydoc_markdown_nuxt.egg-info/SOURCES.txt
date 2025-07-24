@@ -10,3 +10,11 @@ src/pydoc_markdown_nuxt.egg-info/dependency_links.txt
 src/pydoc_markdown_nuxt.egg-info/entry_points.txt
 src/pydoc_markdown_nuxt.egg-info/requires.txt
 src/pydoc_markdown_nuxt.egg-info/top_level.txt
+tests/test_comprehensive_mdc.py
+tests/test_configuration.py
+tests/test_integration.py
+tests/test_mdc_args.py
+tests/test_mdc_simple.py
+tests/test_renderer.py
+tests/test_resolver.py
+tests/test_utils.py
