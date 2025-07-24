@@ -1,8 +1,8 @@
 [project]
 name = "pydoc-markdown-nuxt"
 version = "0.1.0"
-description = "A Nuxt.js plugin for rendering Python documentation with pydoc-markdown"
-keywords = ["pydoc-markdown", "nuxt", "documentation", "python"]
+description = "A Nuxt.js renderer for pydoc-markdown that generates documentation compatible with Nuxt Content and MDC"
+keywords = ["pydoc-markdown", "nuxt", "documentation", "python", "mdc", "nuxt-content"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -14,6 +14,8 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Framework :: Nuxt",
+    "Topic :: Documentation",
+    "Topic :: Software Development :: Documentation",
 ]
 authors = [{name = "Uriel Curiel", email = "urielcuriel@outlook.com"}]
 readme = "README.md"
@@ -21,8 +23,18 @@ requires-python = ">=3.8"
 license = {text = "MIT"}
 dependencies = [
     "pydoc-markdown>=4.8.2",
+    "PyYAML>=5.0",
 ]
 
+[project.entry-points."pydoc_markdown.interfaces.Renderer"]
+nuxt = "pydoc_markdown_nuxt:NuxtRenderer"
+
 [build-system]
-requires = ["setuptools>=42"]
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
