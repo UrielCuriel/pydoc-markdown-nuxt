@@ -3,13 +3,15 @@ Pytest configuration file for pydoc-markdown-nuxt.
 
 This file contains shared fixtures and configuration for all tests.
 """
+
 import os
 import sys
+
 import pytest
-from pathlib import Path
 
 # Add src to path so we can import our module without installing it
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
+
 
 # Fixture for temporary test directory
 @pytest.fixture
@@ -18,6 +20,7 @@ def temp_test_dir(tmp_path):
     test_dir = tmp_path / "test_output"
     test_dir.mkdir(exist_ok=True)
     return test_dir
+
 
 # Fixture for sample docstrings
 @pytest.fixture
@@ -36,6 +39,7 @@ A test function to demonstrate argument rendering.
 
 Some return value
 """
+
 
 @pytest.fixture
 def comprehensive_docstring():
