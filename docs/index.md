@@ -1,27 +1,3 @@
-Metadata-Version: 2.4
-Name: pydoc-markdown-nuxt
-Version: 0.1.0
-Summary: A Nuxt.js renderer for pydoc-markdown that generates documentation compatible with Nuxt Content and MDC
-Author-email: Uriel Curiel <urielcuriel@outlook.com>
-License: MIT
-Keywords: pydoc-markdown,nuxt,documentation,python,mdc,nuxt-content
-Classifier: Development Status :: 3 - Alpha
-Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
-Classifier: Programming Language :: Python :: 3.9
-Classifier: Programming Language :: Python :: 3.10
-Classifier: Programming Language :: Python :: 3.11
-Classifier: Programming Language :: Python :: 3.12
-Classifier: Framework :: Nuxt
-Classifier: Topic :: Documentation
-Classifier: Topic :: Software Development :: Documentation
-Requires-Python: >=3.8
-Description-Content-Type: text/markdown
-Requires-Dist: pydoc-markdown>=4.8.2
-Requires-Dist: PyYAML>=5.0
-
 # pydoc-markdown-nuxt
 
 A pydoc-markdown renderer for generating documentation compatible with Nuxt Content and MDC (Markdown Components).
@@ -213,3 +189,18 @@ python test_renderer.py
 ## License
 
 MIT License - see LICENSE file for details.
+---
+badge: Latest
+description: Welcome to our Python library documentation
+hero: true
+icon: heroicons:home
+layout: docs
+navigation:
+  icon: heroicons:book-open
+  title: Documentation
+seo:
+  description: Welcome to our Python library documentation
+  title: Home - Diseño técnico
+title: Home
+---
+

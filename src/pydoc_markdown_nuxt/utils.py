@@ -2,11 +2,28 @@
 Utility functions for working with Nuxt Content and MDC syntax.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 import re
 
 
-def create_mdc_alert(content: str, type: str = "info", title: Optional[str] = None) -> str:
+def _convert_to_kebab_case(component_name: str) -> str:
+    """
+    Convert component name to kebab-case following Nuxt MDC conventions.
+    
+    Examples:
+        UAlert -> u-alert
+        UCodeGroup -> u-code-group
+        UPageHero -> u-page-hero
+        CustomComponent -> custom-component
+    """
+    # Convert PascalCase to kebab-case
+    # Insert hyphens before uppercase letters (except the first one)
+    kebab_case = re.sub(r'(?<!^)(?=[A-Z])', '-', component_name).lower()
+    
+    return kebab_case
+
+
+def create_mdc_alert(content: str, type: str = "info", title: Optional[str] = None, component: str = "UAlert") -> str:
     """
     Create an MDC alert component.
     
@@ -14,6 +31,7 @@ def create_mdc_alert(content: str, type: str = "info", title: Optional[str] = No
         content: The alert content
         type: Alert type (info, warning, error, success)
         title: Optional title for the alert
+        component: Component name to use (default: UAlert)
         
     Returns:
         MDC alert syntax string
@@ -22,20 +40,27 @@ def create_mdc_alert(content: str, type: str = "info", title: Optional[str] = No
     if title:
         props += f' title="{title}"'
     
-    return f"::alert{{{props}}}\n{content}\n::"
+    # Convert component name to kebab-case
+    component_name = _convert_to_kebab_case(component)
+    
+    return f"::{component_name}{{{props}}}\n{content}\n::"
 
 
-def create_mdc_code_group(code_blocks: List[Dict[str, str]]) -> str:
+def create_mdc_code_group(code_blocks: List[Dict[str, str]], component: str = "UCodeGroup") -> str:
     """
     Create an MDC code group with multiple code blocks.
     
     Args:
         code_blocks: List of dicts with 'language', 'filename', and 'code' keys
+        component: Component name to use (default: UCodeGroup)
         
     Returns:
         MDC code group syntax string
     """
-    result = "::code-group\n"
+    # Convert component name to kebab-case
+    component_name = _convert_to_kebab_case(component)
+    
+    result = f"::{component_name}\n"
     
     for block in code_blocks:
         lang = block.get('language', 'text')
@@ -53,17 +78,21 @@ def create_mdc_code_group(code_blocks: List[Dict[str, str]]) -> str:
     return result
 
 
-def create_mdc_tabs(tabs: List[Dict[str, str]]) -> str:
+def create_mdc_tabs(tabs: List[Dict[str, str]], component: str = "UTabs") -> str:
     """
     Create MDC tabs component.
     
     Args:
         tabs: List of dicts with 'title' and 'content' keys
+        component: Component name to use (default: UTabs)
         
     Returns:
         MDC tabs syntax string
     """
-    result = "::tabs\n"
+    # Convert component name to kebab-case
+    component_name = _convert_to_kebab_case(component)
+    
+    result = f"::{component_name}\n"
     
     for tab in tabs:
         title = tab.get('title', 'Tab')
@@ -75,6 +104,93 @@ def create_mdc_tabs(tabs: List[Dict[str, str]]) -> str:
     
     result += "::"
     return result
+
+
+def create_mdc_variables(variables: List[Dict[str, str]], component: str = "UVariables") -> str:
+    """
+    Create an MDC variables component.
+    
+    Args:
+        variables: List of dicts with 'name', 'type', and 'content' keys
+        component: Component name to use (default: UVariables)
+        
+    Returns:
+        MDC variables syntax string
+    """
+    # Convert component name to kebab-case
+    component_name = _convert_to_kebab_case(component)
+    
+    # Build the frontmatter-style variables section
+    variables_yaml = "---\nvariables:\n"
+    for var in variables:
+        name = var.get('name', '')
+        type_info = var.get('type', '')
+        content = var.get('content', '')
+        
+        variables_yaml += f"  - name: {name}\n"
+        variables_yaml += f"    type: {type_info}\n"
+        variables_yaml += f"    content: {content}\n"
+    
+    variables_yaml += "---"
+    
+    return f"::{component_name}\n{variables_yaml}\n::"
+
+
+def create_mdc_arguments(arguments: List[Dict[str, str]], component: str = "UArguments") -> str:
+    """
+    Create an MDC arguments component.
+    
+    Args:
+        arguments: List of dicts with 'name', 'type', and 'content' keys
+        component: Component name to use (default: UArguments)
+        
+    Returns:
+        MDC arguments syntax string
+    """
+    # Convert component name to kebab-case
+    component_name = _convert_to_kebab_case(component)
+    
+    # Build the frontmatter-style arguments section
+    arguments_yaml = "---\narguments:\n"
+    for arg in arguments:
+        name = arg.get('name', '')
+        type_info = arg.get('type', '')
+        content = arg.get('content', '')
+        
+        arguments_yaml += f"  - name: {name}\n"
+        arguments_yaml += f"    type: {type_info}\n"
+        arguments_yaml += f"    content: {content}\n"
+    
+    arguments_yaml += "---"
+    
+    return f"::{component_name}\n{arguments_yaml}\n::"
+
+
+def create_variable_or_argument_component(
+    items: List[Dict[str, str]], 
+    component_type: str = "variables",
+    component: Optional[str] = None
+) -> str:
+    """
+    Create either a variables or arguments MDC component.
+    
+    Args:
+        items: List of dicts with 'name', 'type', and 'content' keys
+        component_type: Either 'variables' or 'arguments'
+        component: Component name to use (auto-detected if None)
+        
+    Returns:
+        MDC component syntax string
+    """
+    if component is None:
+        component = f"U{component_type.capitalize()}"
+    
+    if component_type.lower() == "variables":
+        return create_mdc_variables(items, component)
+    elif component_type.lower() == "arguments":
+        return create_mdc_arguments(items, component)
+    else:
+        raise ValueError(f"Invalid component_type: {component_type}. Must be 'variables' or 'arguments'")
 
 
 def create_navigation_entry(title: str, path: str, icon: Optional[str] = None, 
@@ -221,14 +337,34 @@ class NuxtContentHelper:
     Helper class for generating Nuxt Content compatible documentation.
     """
     
-    def __init__(self, base_url: str = "/docs", use_mdc: bool = True):
+    def __init__(self, base_url: str = "/docs", use_mdc: bool = True, 
+                 mdc_components: Optional[Dict[str, str]] = None):
         self.base_url = base_url
         self.use_mdc = use_mdc
+        # Default to Nuxt UI components
+        self.mdc_components = mdc_components or {
+            "alert": "UAlert",
+            "code_group": "UCodeGroup", 
+            "tabs": "UTabs",
+            "variables": "UVariables",
+            "arguments": "UArguments",
+            "button": "UButton",
+            "card": "UCard",
+            "hero": "UPageHero",
+            "feature": "ULandingCard"
+        }
     
-    def wrap_with_mdc_if_enabled(self, content: str, component: str, props: str = "") -> str:
+    def get_component_name(self, component_type: str) -> str:
+        """Get the configured component name for a component type."""
+        component = self.mdc_components.get(component_type, component_type)
+        # Convert component name to kebab-case following MDC conventions
+        return _convert_to_kebab_case(component)
+    
+    def wrap_with_mdc_if_enabled(self, content: str, component_type: str, props: str = "") -> str:
         """Wrap content with MDC component if MDC is enabled."""
         if self.use_mdc:
-            return f"::{component}{{{props}}}\n{content}\n::"
+            component_name = self.get_component_name(component_type)
+            return f"::{component_name}{{{props}}}\n{content}\n::"
         return content
     
     def create_hero_section(self, title: str, description: str, 
@@ -244,12 +380,14 @@ class NuxtContentHelper:
                 variant = link.get('variant', 'primary')
                 
                 if self.use_mdc:
-                    content += f"::button[{label}]{{to=\"{url}\" variant=\"{variant}\"}}\n"
+                    button_component = self.get_component_name('button')
+                    content += f"::{button_component}[{label}]{{to=\"{url}\" variant=\"{variant}\"}}\n"
                 else:
                     content += f"[{label}]({url})\n"
         
         if self.use_mdc:
-            return f"::hero\n{content}\n::"
+            hero_component = self.get_component_name('hero')
+            return f"::{hero_component}\n{content}\n::"
         return content
     
     def create_feature_list(self, features: List[Dict[str, str]]) -> str:
@@ -264,9 +402,50 @@ class NuxtContentHelper:
             icon = feature.get('icon', '')
             
             if self.use_mdc:
+                feature_component = self.get_component_name('feature')
                 icon_prop = f' icon="{icon}"' if icon else ''
-                content += f"::feature{{title=\"{title}\"{icon_prop}}}\n{description}\n::\n\n"
+                content += f"::{feature_component}{{title=\"{title}\"{icon_prop}}}\n{description}\n::\n\n"
             else:
                 content += f"### {title}\n\n{description}\n\n"
         
         return content.strip()
+    
+    def create_variables_section(self, variables: List[Dict[str, str]]) -> str:
+        """Create a variables section using configured component."""
+        if not variables:
+            return ""
+        
+        if self.use_mdc:
+            component = self.mdc_components.get('variables', 'UVariables')
+            return create_mdc_variables(variables, component)
+        else:
+            # Fallback to regular markdown table
+            content = "## Variables\n\n"
+            content += "| Name | Type | Description |\n"
+            content += "|------|------|-------------|\n"
+            for var in variables:
+                name = var.get('name', '')
+                type_info = var.get('type', '')
+                description = var.get('content', '')
+                content += f"| {name} | {type_info} | {description} |\n"
+            return content
+    
+    def create_arguments_section(self, arguments: List[Dict[str, str]]) -> str:
+        """Create an arguments section using configured component."""
+        if not arguments:
+            return ""
+        
+        if self.use_mdc:
+            component = self.mdc_components.get('arguments', 'UArguments')
+            return create_mdc_arguments(arguments, component)
+        else:
+            # Fallback to regular markdown table
+            content = "## Arguments\n\n"
+            content += "| Name | Type | Description |\n"
+            content += "|------|------|-------------|\n"
+            for arg in arguments:
+                name = arg.get('name', '')
+                type_info = arg.get('type', '')
+                description = arg.get('content', '')
+                content += f"| {name} | {type_info} | {description} |\n"
+            return content

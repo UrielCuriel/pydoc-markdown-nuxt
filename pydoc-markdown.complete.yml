@@ -11,188 +11,195 @@ processors:
   - type: smart
   - type: crossref
 
-renderers:
-  - type: nuxt
-    # Directory where Nuxt Content files will be generated
-    content_directory: content/docs
-    
-    # Enable MDC (Markdown Components) support
-    use_mdc: true
-    
-    # Base URL for documentation links
-    base_url: /docs/
-    
-    # Clean previously generated files
-    clean_render: true
-    
-    # Default frontmatter applied to all pages
-    default_frontmatter:
-      layout: docs
-      navigation: true
-      sidebar: true
-      head:
-        meta:
-          - name: "description"
-            content: "Python API documentation"
-          - name: "keywords"  
-            content: "python, api, documentation, pydoc-markdown, nuxt"
-    
-    # Markdown renderer configuration
-    markdown:
-      code_headers: true
-      descriptive_class_title: true
-      add_module_prefix: true
-      render_toc: true
-      toc_maxdepth: 3
-      insert_header_anchors: true
-      html_headers: false
-    
-    # Page structure configuration
-    pages:
-      # Home page
-      - title: Home
-        name: index
-        source: README.md
-        frontmatter:
-          description: "Welcome to our Python library documentation"
-          icon: "heroicons:home"
-          hero: true
-          badge: "Latest"
-          
-      # Getting started
-      - title: Getting Started
-        name: getting-started
-        source: docs/getting-started.md
-        frontmatter:
-          description: "Quick start guide and installation instructions"
-          icon: "heroicons:rocket-launch"
-          category: "Guide"
-          order: 1
+renderer:
+  type: nuxt
+  # Directory where Nuxt Content files will be generated
+  content_directory: content/docs
+  
+  # Enable MDC (Markdown Components) support
+  use_mdc: true
+  
+  # Configure MDC components (defaults to Nuxt UI components)
+  # You can customize these to use different component libraries
+  mdc_components:
+    alert: UAlert              # Component for alerts/notifications
+    code_group: UCodeGroup     # Component for code blocks with tabs
+    tabs: UTabs                # Component for tabbed content
+    variables: UVariables      # Component for API variables documentation
+    arguments: UArguments      # Component for function arguments documentation
+    button: UButton            # Component for buttons/links
+    card: UCard                # Component for cards
+    hero: UPageHero            # Component for hero sections
+    feature: ULandingCard      # Component for feature lists
+  
+  # Base URL for documentation links
+  base_url: /docs/
+  
+  # Clean previously generated files
+  clean_render: true
+  
+  # Default frontmatter applied to all pages
+  default_frontmatter:
+    layout: docs
+    navigation: 
+      title: Documentation
+      icon: "heroicons:book-open"
+  
+  # Markdown renderer configuration
+  markdown:
+    code_headers: true
+    descriptive_class_title: true
+    add_module_prefix: true
+    render_toc: false
+    insert_header_anchors: true
+    html_headers: false
+  
+  # Page structure configuration
+  pages:
+    # Home page
+    - title: Home
+      name: index
+      source: README.md
+      frontmatter:
+        description: "Welcome to our Python library documentation"
+        icon: "heroicons:home"
+        hero: true
+        badge: "Latest"
+        
+    # Getting started
+    - title: Getting Started
+      name: getting-started
+      source: docs/getting-started.md
+      frontmatter:
+        description: "Quick start guide and installation instructions"
+        icon: "heroicons:rocket-launch"
+        category: "Guide"
+        order: 1
           
       # Installation guide
-      - title: Installation
-        name: installation
-        source: docs/installation.md
-        frontmatter:
-          description: "Installation and setup instructions"
-          icon: "heroicons:arrow-down-tray"
-          category: "Guide"
-          order: 2
+    - title: Installation
+      name: installation
+      source: docs/installation.md
+      frontmatter:
+        description: "Installation and setup instructions"
+        icon: "heroicons:arrow-down-tray"
+        category: "Guide"
+        order: 2
           
       # Complete API reference (all modules)
-      - title: API Reference
-        name: index
-        directory: api
-        frontmatter:
-          description: "Complete API reference documentation"
+    - title: API Reference
+      name: index
+      directory: api
+      frontmatter:
+        description: "Complete API reference documentation"
+        icon: "heroicons:code-bracket"
+        category: "API"
+        navigation:
+          title: "API Reference"
           icon: "heroicons:code-bracket"
-          category: "API"
-          navigation:
-            title: "API Reference"
-            icon: "heroicons:code-bracket"
-        contents:
-          - '*'
+      contents:
+        - '*'
           
       # Core module documentation
-      - title: Core Module
-        name: core
-        directory: api/modules
-        frontmatter:
-          description: "Core functionality and base classes"
-          icon: "heroicons:cog-6-tooth"
-          category: "API"
-          section: "Core"
-        contents:
-          - mypackage.core.*
+    - title: Core Module
+      name: core
+      directory: api/modules
+      frontmatter:
+        description: "Core functionality and base classes"
+        icon: "heroicons:cog-6-tooth"
+        category: "API"
+        section: "Core"
+      contents:
+        - mypackage.core.*
           
       # Utils module
-      - title: Utilities
-        name: utils
-        directory: api/modules
-        frontmatter:
-          description: "Utility functions and helpers"
-          icon: "heroicons:wrench-screwdriver"
-          category: "API"
-          section: "Utilities"
-        contents:
-          - mypackage.utils.*
+    - title: Utilities
+      name: utils
+      directory: api/modules
+      frontmatter:
+        description: "Utility functions and helpers"
+        icon: "heroicons:wrench-screwdriver"
+        category: "API"
+        section: "Utilities"
+      contents:
+        - mypackage.utils.*
           
       # Models/Data structures
-      - title: Data Models
-        name: models
-        directory: api/modules
-        frontmatter:
-          description: "Data models and structures"
-          icon: "heroicons:squares-2x2"
-          category: "API"
-          section: "Models"
-        contents:
-          - mypackage.models.*
+    - title: Data Models
+      name: models
+      directory: api/modules
+      frontmatter:
+        description: "Data models and structures"
+        icon: "heroicons:squares-2x2"
+        category: "API"
+        section: "Models"
+      contents:
+        - mypackage.models.*
           
       # Examples section
-      - title: Examples
-        name: index
-        directory: examples
-        source: docs/examples.md
-        frontmatter:
-          description: "Code examples and tutorials"
-          icon: "heroicons:light-bulb"
-          category: "Examples"
+    - title: Examples
+      name: index
+      directory: examples
+      source: docs/examples.md
+      frontmatter:
+        description: "Code examples and tutorials"
+        icon: "heroicons:light-bulb"
+        category: "Examples"
           
       # Basic usage examples
-      - title: Basic Usage
-        name: basic
-        directory: examples
-        source: docs/examples/basic.md
-        frontmatter:
-          description: "Basic usage examples"
-          icon: "heroicons:play"
-          category: "Examples"
-          order: 1
+    - title: Basic Usage
+      name: basic
+      directory: examples
+      source: docs/examples/basic.md
+      frontmatter:
+        description: "Basic usage examples"
+        icon: "heroicons:play"
+        category: "Examples"
+        order: 1
           
       # Advanced examples
-      - title: Advanced Usage
-        name: advanced
-        directory: examples
-        source: docs/examples/advanced.md
-        frontmatter:
-          description: "Advanced usage patterns"
-          icon: "heroicons:academic-cap"
-          category: "Examples"
-          order: 2
+    - title: Advanced Usage
+      name: advanced
+      directory: examples
+      source: docs/examples/advanced.md
+      frontmatter:
+        description: "Advanced usage patterns"
+        icon: "heroicons:academic-cap"
+        category: "Examples"
+        order: 2
           
       # FAQ
-      - title: FAQ
-        name: faq
-        source: docs/faq.md
-        frontmatter:
-          description: "Frequently asked questions"
-          icon: "heroicons:question-mark-circle"
-          category: "Help"
+    - title: FAQ
+      name: faq
+      source: docs/faq.md
+      frontmatter:
+        description: "Frequently asked questions"
+        icon: "heroicons:question-mark-circle"
+        category: "Help"
           
       # Troubleshooting
-      - title: Troubleshooting
-        name: troubleshooting
-        source: docs/troubleshooting.md
-        frontmatter:
-          description: "Common issues and solutions"
-          icon: "heroicons:wrench"
-          category: "Help"
+    - title: Troubleshooting
+      name: troubleshooting
+      source: docs/troubleshooting.md
+      frontmatter:
+        description: "Common issues and solutions"
+        icon: "heroicons:wrench"
+        category: "Help"
           
       # Changelog
-      - title: Changelog
-        name: changelog
-        source: CHANGELOG.md
-        frontmatter:
-          description: "Version history and release notes"
-          icon: "heroicons:document-text"
-          category: "Meta"
+    - title: Changelog
+      name: changelog
+      source: CHANGELOG.md
+      frontmatter:
+        description: "Version history and release notes"
+        icon: "heroicons:document-text"
+        category: "Meta"
           
       # Contributing guide
-      - title: Contributing
-        name: contributing
-        source: CONTRIBUTING.md
-        frontmatter:
-          description: "How to contribute to this project"
-          icon: "heroicons:heart"
-          category: "Meta"
+    - title: Contributing
+      name: contributing
+      source: CONTRIBUTING.md
+      frontmatter:
+        description: "How to contribute to this project"
+        icon: "heroicons:heart"
+        category: "Meta"

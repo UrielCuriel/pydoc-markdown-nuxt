@@ -4,14 +4,14 @@ loaders:
   - type: python
     search_path: [src]
 
-renderers:
-  - type: nuxt
-    content_directory: test_output/content
-    default_frontmatter:
-      layout: docs
-      navigation: true
-    pages:
-      - title: Test Documentation
-        name: test
-        contents:
-          - '*'
+renderer:
+  type: nuxt
+  content_directory: test_output/content
+  default_frontmatter:
+    layout: docs
+    navigation: true
+  pages:
+    - title: Test Documentation
+      name: test
+      contents:
+        - '*'

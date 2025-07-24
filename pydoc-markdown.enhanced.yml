@@ -1,0 +1,94 @@
+# Complete example pydoc-markdown configuration for Nuxt Content with custom components
+# This demonstrates all features of pydoc-markdown-nuxt including the new configurable components
+
+loaders:
+  - type: python
+    search_path: [src]
+
+processors:
+  - type: filter
+    expression: not name.startswith('_')
+  - type: smart
+  - type: crossref
+
+renderer:
+  type: nuxt
+  # Directory where Nuxt Content files will be generated
+  content_directory: content/docs
+  
+  # Enable MDC (Markdown Components) support
+  use_mdc: true
+  
+  # Configure MDC components (examples with different component libraries)
+  mdc_components:
+    # Nuxt UI components (default)
+    alert: UAlert                    # Renders as ::u-alert
+    code_group: UCodeGroup           # Renders as ::u-code-group
+    tabs: UTabs                      # Renders as ::u-tabs
+    variables: UVariables            # Renders as ::u-variables
+    arguments: UArguments            # Renders as ::u-arguments
+    button: UButton                  # Renders as ::u-button
+    card: UCard                      # Renders as ::u-card
+    hero: UPageHero                  # Renders as ::u-page-hero
+    feature: ULandingCard            # Renders as ::u-landing-card
+    
+    # Alternative: Custom components
+    # alert: CustomAlert             # Would render as ::custom-alert
+    # variables: ApiVariables        # Would render as ::api-variables
+    # arguments: FunctionArgs        # Would render as ::function-args
+  
+  # Base URL for documentation links
+  base_url: /docs/
+  
+  # Clean previously generated files
+  clean_render: true
+  
+  # Default frontmatter applied to all pages
+  default_frontmatter:
+    layout: docs
+    head:
+      meta:
+        - name: "description"
+          content: "Python API documentation with enhanced MDC components"
+        - name: "keywords"  
+          content: "python, api, documentation, pydoc-markdown, nuxt, nuxt-ui, mdc"
+  
+  # Markdown renderer configuration
+  markdown:
+    code_headers: true
+    descriptive_class_title: true
+    add_module_prefix: true
+    insert_header_anchors: true
+    html_headers: false
+  
+  # Page structure configuration
+  pages:
+    # Main API documentation
+    - title: API Reference
+      name: index
+      contents:
+        - '*'
+      frontmatter:
+        description: "Complete API reference for pydoc-markdown-nuxt"
+        
+    # Detailed module documentation  
+    - title: Renderer
+      name: renderer
+      contents:
+        - pydoc_markdown_nuxt.renderer.*
+      frontmatter:
+        description: "Nuxt Content renderer implementation"
+        
+    - title: Utilities
+      name: utils
+      contents:
+        - pydoc_markdown_nuxt.utils.*
+      frontmatter:
+        description: "Utility functions for MDC components"
+        
+    - title: Examples
+      name: examples
+      contents:
+        - pydoc_markdown_nuxt.examples.*
+      frontmatter:
+        description: "Usage examples and configurations"
