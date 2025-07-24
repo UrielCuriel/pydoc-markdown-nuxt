@@ -53,8 +53,10 @@ def test_advanced_configuration(temp_test_dir):
         'use_mdc': True,
         'default_frontmatter': {
             'layout': 'docs',
-            'navigation': True,
-            'sidebar': True
+            'navigation': {
+                'title': 'Documentation',
+                'icon': 'book',
+            }
         },
         'pages': [
             {
