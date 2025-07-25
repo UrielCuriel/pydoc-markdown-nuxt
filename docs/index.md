@@ -189,3 +189,18 @@ python test_renderer.py
 ## License
 
 MIT License - see LICENSE file for details.
+---
+badge: Latest
+description: Welcome to our Python library documentation
+hero: true
+icon: heroicons:home
+layout: docs
+navigation:
+  icon: heroicons:book-open
+  title: Documentation
+seo:
+  description: Welcome to our Python library documentation
+  title: Home - Diseño técnico
+title: Home
+---
+

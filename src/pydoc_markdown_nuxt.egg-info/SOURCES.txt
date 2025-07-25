@@ -1,7 +1,0 @@
-README.md
-pyproject.toml
-src/pydoc_markdown_nuxt.egg-info/PKG-INFO
-src/pydoc_markdown_nuxt.egg-info/SOURCES.txt
-src/pydoc_markdown_nuxt.egg-info/dependency_links.txt
-src/pydoc_markdown_nuxt.egg-info/requires.txt
-src/pydoc_markdown_nuxt.egg-info/top_level.txt

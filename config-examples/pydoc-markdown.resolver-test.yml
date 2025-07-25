@@ -1,0 +1,19 @@
+loaders:
+  - type: python
+    search_path: [.]
+    modules: [test_resolver]
+
+renderer:
+  type: nuxt
+  content_directory: test_output
+  enable_content_resolver: true
+  api_references_path: "api"
+  enable_navigation_generation: false
+  default_frontmatter:
+    layout: default
+    navigation: true
+  pages:
+    - title: "Test Resolver Documentation"
+      name: index
+      contents:
+        - test_resolver.*

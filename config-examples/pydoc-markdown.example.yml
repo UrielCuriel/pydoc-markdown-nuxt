@@ -1,0 +1,108 @@
+# Example pydoc-markdown configuration for Nuxt Content
+
+loaders:
+  - type: python
+    search_path: [src]
+
+processors:
+  - type: filter
+    expression: not name.startswith('_')
+  - type: smart
+  - type: crossref
+
+renderers:
+  - type: nuxt
+    content_directory: content/docs
+    use_mdc: true
+    base_url: /docs/
+    clean_render: true
+    default_frontmatter:
+      layout: docs
+      navigation: true
+      sidebar: true
+      head:
+        meta:
+          - name: "description"
+            content: "Python API documentation"
+          - name: "keywords"
+            content: "python, api, documentation"
+    markdown:
+      code_headers: true
+      descriptive_class_title: true
+      add_module_prefix: true
+      render_toc: true
+      toc_maxdepth: 3
+    pages:
+      # Home page from README
+      - title: Home
+        name: index
+        source: README.md
+        frontmatter:
+          description: "Welcome to our Python library documentation"
+          icon: "mdi:home"
+          badge: "New"
+          
+      # Getting started guide
+      - title: Getting Started
+        name: getting-started
+        source: docs/getting-started.md
+        frontmatter:
+          description: "Quick start guide and installation instructions"
+          icon: "mdi:rocket-launch"
+          category: "Guide"
+          
+      # API Reference with all modules
+      - title: API Reference
+        name: api
+        directory: reference
+        frontmatter:
+          description: "Complete API reference documentation"
+          icon: "mdi:api"
+          category: "API"
+          head:
+            meta:
+              - name: "robots"
+                content: "index,follow"
+        contents:
+          - '*'
+          
+      # Specific module documentation
+      - title: Core Module
+        name: core
+        directory: reference
+        frontmatter:
+          description: "Core functionality and base classes"
+          icon: "mdi:cog"
+          category: "API"
+        contents:
+          - mypackage.core.*
+          
+      # Utilities
+      - title: Utilities
+        name: utils
+        directory: reference
+        frontmatter:
+          description: "Utility functions and helpers"
+          icon: "mdi:tools"
+          category: "API"
+        contents:
+          - mypackage.utils.*
+          
+      # Examples
+      - title: Examples
+        name: examples
+        directory: examples
+        source: docs/examples.md
+        frontmatter:
+          description: "Code examples and tutorials"
+          icon: "mdi:lightbulb"
+          category: "Guide"
+          
+      # Changelog
+      - title: Changelog
+        name: changelog
+        source: CHANGELOG.md
+        frontmatter:
+          description: "Version history and changes"
+          icon: "mdi:history"
+          category: "Meta"

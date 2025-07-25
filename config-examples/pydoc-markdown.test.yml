@@ -1,0 +1,17 @@
+# Simple test configuration for pydoc-markdown-nuxt
+
+loaders:
+  - type: python
+    search_path: [src]
+
+renderer:
+  type: nuxt
+  content_directory: test_output/content
+  default_frontmatter:
+    layout: docs
+    navigation: true
+  pages:
+    - title: Test Documentation
+      name: test
+      contents:
+        - '*'

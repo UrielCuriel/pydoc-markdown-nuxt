@@ -1,0 +1,27 @@
+loaders:
+  - type: python
+    search_path: [.]
+
+processors:
+  - type: filter
+    expression: not name.startswith('_')
+  - type: smart
+  - type: crossref
+
+renderer:
+  type: nuxt
+  content_directory: test_output
+  use_mdc: true
+  mdc_components:
+    arguments: UArguments
+    returns: UReturns
+    examples: UCodeGroup
+    notes: UAlert
+    warnings: UAlert
+    raises: UCallout
+    code_block: UCodeGroup
+  pages:
+    - title: Test
+      name: test
+      contents:
+        - example_comprehensive.comprehensive_example_function
