@@ -408,8 +408,8 @@ class MDCMarkdownRenderer(MarkdownRenderer):
             docstring (str): Docstring text to transform.
 
         Returns:
-            The docstring where ``Raises`` sections are replaced with MDC callou
-            t components summarizing the exceptions raised.
+            The docstring where ``Raises`` sections are replaced with MDC callout
+            components summarizing the exceptions raised.
         """
         import re
 
