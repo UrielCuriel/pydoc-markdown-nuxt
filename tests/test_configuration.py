@@ -99,7 +99,7 @@ def test_advanced_configuration(temp_test_dir):
             title=str(page_config["title"]),
             name=str(page_config.get("name")) if page_config.get("name") is not None else None,
             frontmatter=frontmatter,
-            directory=str(page_config.get("directory")),
+            directory=page_config.get("directory"),  # Don't convert None to string
         )
         renderer.pages.append(page)
 

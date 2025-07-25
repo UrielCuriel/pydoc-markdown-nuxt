@@ -88,6 +88,8 @@ def test_mdc_arguments(temp_test_dir, mock_module):
     # Check that the content contains MDC arguments
     content = output_file.read_text()
     assert "::u-arguments" in content
-    assert "param1" in content
-    assert "param2: str" in content
-    assert "param3: int" in content
+    assert "name: param1" in content
+    assert "name: param2" in content
+    assert "type: str" in content
+    assert "name: param3" in content
+    assert "type: int" in content

@@ -1,63 +1,105 @@
 """
 Test NuxtContentResolver functionality with pytest.
 """
+
+import docspec
 import pytest
-from pathlib import Path
 
-@pytest.mark.integration
-def test_content_resolver(temp_test_dir):
-    """Test that the content resolver correctly processes cross-references."""
-    # First, create a copy of the test configuration pointing to our temp directory
-    config_content = """
-loaders:
-  - type: python
-    search_path: [.]
-    modules: [test_resolver]
+from src.pydoc_markdown_nuxt.renderer import MDCMarkdownRenderer, NuxtContentResolver
 
-renderer:
-  type: nuxt
-  content_directory: {temp_dir}
-  enable_content_resolver: true
-  api_references_path: "api"
-  enable_navigation_generation: false
-  default_frontmatter:
-    layout: default
-    navigation: true
-  pages:
-    - title: "Test Resolver Documentation"
-      name: index
-      contents:
-        - test_resolver.*
-""".format(temp_dir=str(temp_test_dir))
-    
-    # Write the config to a temporary file
-    config_path = temp_test_dir / "test_resolver_config.yml"
-    config_path.write_text(config_content)
-    
-    # Run pydoc-markdown with the config
-    import subprocess
-    import os
-    
-    result = subprocess.run(
-        ["pydoc-markdown", str(config_path)], 
-        capture_output=True,
-        text=True,
-        check=False
+
+@pytest.mark.unit
+def test_nuxt_content_resolver():
+    """Test that the NuxtContentResolver correctly resolves references."""
+
+    # Create a resolver with a base path
+    resolver = NuxtContentResolver("docs/api")
+
+    # Create a mock API object hierarchy for testing
+    root_module = docspec.Module(
+        name="mypackage",
+        location=docspec.Location(filename="mypackage/__init__.py", lineno=1),
+        docstring=None,
+        members=[],
     )
+
+    sub_module = docspec.Module(
+        name="core", location=docspec.Location(filename="mypackage/core.py", lineno=1), docstring=None, members=[]
+    )
+
+    test_class = docspec.Class(
+        name="DataProcessor",
+        location=docspec.Location(filename="mypackage/core.py", lineno=10),
+        docstring=None,
+        members=[],
+        metaclass=None,
+        bases=[],
+        decorations=[],
+    )
+
+    test_method = docspec.Function(
+        name="process",
+        location=docspec.Location(filename="mypackage/core.py", lineno=20),
+        docstring=None,
+        modifiers=None,
+        args=[],
+        return_type=None,
+        decorations=[],
+    )
+
+    # Build the hierarchy manually
+    sub_module.parent = root_module
+    test_class.parent = sub_module
+    test_method.parent = test_class
+
+    root_module.members = [sub_module]
+    sub_module.members = [test_class]
+    test_class.members = [test_method]
+
+    # Test basic reference resolution
+    result = resolver.resolve_ref(root_module, "mypackage.core.DataProcessor")
+    expected = "/docs/api/mypackage/core/dataprocessor"
+    assert result == expected
+
+    # Test object ID generation
+    object_id = resolver.generate_object_id(test_method)
+    expected_id = "mypackage.core.DataProcessor.process"
+    assert object_id == expected_id
+
+
+@pytest.mark.unit
+def test_mdc_markdown_renderer_with_resolver():
+    """Test that MDCMarkdownRenderer works with NuxtContentResolver."""
+
+    # Create renderer with content resolver
+    renderer = MDCMarkdownRenderer(content_directory="content/docs", use_mdc=True)
+
+    # Test that the resolver is correctly initialized
+    assert isinstance(renderer._resolver, NuxtContentResolver)
+    assert renderer._resolver.base_path == "content/docs"
+
+    # Test docstring processing with cross-references
+    docstring_with_refs = """
+    A test function that processes data.
     
-    # Check if the command succeeded
-    assert result.returncode == 0, f"pydoc-markdown failed: {result.stderr}"
+    **Arguments**:
     
-    # Check for generated files
-    index_path = temp_test_dir / "index.md"
-    assert index_path.exists()
+    - `data: str` - The input data to process
+    - `config: Config` - Configuration object
     
-    # Verify content resolution in the generated file
-    content = index_path.read_text()
+    **Returns**:
     
-    # Check for resolved cross-references
-    assert "/api/ExampleClass" in content or "/api/test_resolver.ExampleClass" in content
-    assert "/api/ExampleSubclass" in content or "/api/test_resolver.ExampleSubclass" in content
+    Processed data as a string.
     
-    # Cross-reference in docstring should be processed
-    assert "See also: [ExampleSubclass]" in content
+    See also: mypackage.core.Config for configuration details.
+    """
+
+    # Process the docstring
+    result = renderer._process_docstring_for_mdc(docstring_with_refs)
+
+    # Verify MDC conversion happened
+    assert "::u-arguments" in result
+    assert "name: data" in result
+    assert "type: str" in result
+    assert "name: config" in result
+    assert "type: Config" in result

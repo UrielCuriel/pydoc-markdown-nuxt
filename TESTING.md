@@ -8,10 +8,7 @@ Para ejecutar las pruebas, puedes usar pytest directamente o utilizar el script 
 # Instalación de dependencias para desarrollo
 pip install -e ".[dev]"
 
-# Ejecución con script auxiliar
-python run_tests.py
-
-# O directamente con pytest
+# directamente con pytest
 pytest tests/
 ```
 

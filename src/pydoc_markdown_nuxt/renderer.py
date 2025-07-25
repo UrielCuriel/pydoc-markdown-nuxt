@@ -218,7 +218,8 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         import re
 
         # Pattern to match sections like **Arguments**: with list items
-        pattern = rf"\*\*{section_name}\*\*:\s*\n\n((?:- `[^`]+` - .+\n?)+)"
+        # Handle optional whitespace and indentation
+        pattern = rf"\*\*{section_name}\*\*:\s*\n\s*\n((?:\s*- `[^`]+` - .+\n?)+)"
 
         def replace_section(match):
             items_text = match.group(1)
@@ -227,7 +228,7 @@ class MDCMarkdownRenderer(MarkdownRenderer):
 
             # Parse the items
             items = []
-            item_pattern = r"- `([^`]+)` - (.+)"
+            item_pattern = r"\s*- `([^`]+)` - (.+)"
             for item_match in re.finditer(item_pattern, items_text):
                 item_name = item_match.group(1)
                 item_description = item_match.group(2).strip()
@@ -699,7 +700,9 @@ class NuxtRenderer(Renderer):
             name = page.name if page.name is not None else "index"
             return os.path.join(directory, name + page.extension)
         else:
-            return item.filename(self.content_directory, page.extension, skip_empty_pages=False)
+            # For pages without directory, place them directly in content_directory
+            name = page.name if page.name is not None else "index"
+            return os.path.join(self.content_directory, name + page.extension)
 
     def _render_all_pages(self, modules: t.List[docspec.Module], known_files: KnownFiles) -> None:
         """Render all pages and track known files."""
