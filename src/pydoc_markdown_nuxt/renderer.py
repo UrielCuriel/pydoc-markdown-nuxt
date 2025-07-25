@@ -496,7 +496,8 @@ class NuxtContentResolver(MarkdownReferenceResolver):
                 relative reference).
 
         Returns:
-            str: The resolved path for Nuxt Content (e.g., '/docs/api/my/module/myclass').
+            t.Optional[str]: The resolved path for Nuxt Content (e.g., '/docs/api/my/module/myclass'),
+            or `None` if the reference cannot be resolved.
         """
 
         # For now, we assume all references are fully qualified paths from the root.
