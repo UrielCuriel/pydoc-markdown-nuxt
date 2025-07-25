@@ -840,7 +840,18 @@ class NuxtRenderer(Renderer):
         return navigation
 
     def _get_icon_key(self, primary_object: t.Optional[docspec.ApiObject]) -> str:
-        """Return the icon key for a given API object."""
+        """Return the icon key for a given API object.
+
+        Args:
+            primary_object (t.Optional[docspec.ApiObject]): The API object for which
+                the icon key is being determined. Can be a module, class, function,
+                variable, or None.
+
+        Returns:
+            str: The icon key corresponding to the type of the API object. Returns
+            "module" for modules, "class" for classes, "function" for functions,
+            "variable" for variables, and "page" for None or unrecognized types.
+        """
         if not primary_object:
             return "page"
         if isinstance(primary_object, docspec.Module):
