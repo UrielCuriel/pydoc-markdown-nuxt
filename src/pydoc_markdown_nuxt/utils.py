@@ -7,8 +7,15 @@ from typing import Any, Dict, List, Optional
 
 
 def _convert_to_kebab_case(component_name: str) -> str:
-    """
-    Convert component name to kebab-case following Nuxt MDC conventions.
+    """Convert a component name to kebab-case.
+
+    Args:
+        component_name (str): Name of the component in PascalCase or
+            kebab-case.
+
+    Returns:
+        str: The component name converted to kebab-case according to Nuxt MDC
+        conventions.
 
     Examples:
         UAlert -> u-alert
@@ -33,13 +40,14 @@ def create_mdc_alert(content: str, type: str = "info", title: Optional[str] = No
     Create an MDC alert component.
 
     Args:
-        content: The alert content
-        type: Alert type (info, warning, error, success)
-        title: Optional title for the alert
-        component: Component name to use (default: alert)
+        content (str): The alert content.
+        type (str): Alert type (``"info"``, ``"warning"``, ``"error"``,
+            ``"success"``).
+        title (Optional[str]): Optional title for the alert.
+        component (str): Component name to use (default ``"alert"``).
 
     Returns:
-        MDC alert syntax string
+        str: MDC alert syntax string.
     """
     props = f'type="{type}"'
     if title:
@@ -56,11 +64,12 @@ def create_mdc_code_group(code_blocks: List[Dict[str, str]], component: str = "c
     Create an MDC code group with multiple code blocks.
 
     Args:
-        code_blocks: List of dicts with 'language', 'filename', and 'code' keys
-        component: Component name to use (default: code-group)
+        code_blocks (List[Dict[str, str]]): List of dictionaries with
+            ``language``, ``filename`` and ``code`` keys.
+        component (str): Component name to use (default ``"code-group"``).
 
     Returns:
-        MDC code group syntax string
+        str: MDC code group syntax string.
     """
     # Convert component name to kebab-case
     component_name = _convert_to_kebab_case(component)
@@ -88,11 +97,12 @@ def create_mdc_tabs(tabs: List[Dict[str, str]], component: str = "tabs") -> str:
     Create MDC tabs component.
 
     Args:
-        tabs: List of dicts with 'title' and 'content' keys
-        component: Component name to use (default: tabs)
+        tabs (List[Dict[str, str]]): List of dictionaries with ``title`` and
+            ``content`` keys.
+        component (str): Component name to use (default ``"tabs"``).
 
     Returns:
-        MDC tabs syntax string
+        str: MDC tabs syntax string.
     """
     # Convert component name to kebab-case
     component_name = _convert_to_kebab_case(component)
@@ -116,11 +126,12 @@ def create_mdc_variables(variables: List[Dict[str, str]], component: str = "UVar
     Create an MDC variables component.
 
     Args:
-        variables: List of dicts with 'name', 'type', and 'content' keys
-        component: Component name to use (default: UVariables)
+        variables (List[Dict[str, str]]): List of dictionaries with ``name``,
+            ``type`` and ``content`` keys.
+        component (str): Component name to use (default ``"UVariables"``).
 
     Returns:
-        MDC variables syntax string
+        str: MDC variables syntax string.
     """
     # Convert component name to kebab-case
     component_name = _convert_to_kebab_case(component)
@@ -146,11 +157,12 @@ def create_mdc_arguments(arguments: List[Dict[str, str]], component: str = "UArg
     Create an MDC arguments component.
 
     Args:
-        arguments: List of dicts with 'name', 'type', and 'content' keys
-        component: Component name to use (default: UArguments)
+        arguments (List[Dict[str, str]]): List of dictionaries with ``name``,
+            ``type`` and ``content`` keys.
+        component (str): Component name to use (default ``"UArguments"``).
 
     Returns:
-        MDC arguments syntax string
+        str: MDC arguments syntax string.
     """
     # Convert component name to kebab-case
     component_name = _convert_to_kebab_case(component)
@@ -178,12 +190,14 @@ def create_variable_or_argument_component(
     Create either a variables or arguments MDC component.
 
     Args:
-        items: List of dicts with 'name', 'type', and 'content' keys
-        component_type: Either 'variables' or 'arguments'
-        component: Component name to use (auto-detected if None)
+        items (List[Dict[str, str]]): List of dictionaries with ``name``,
+            ``type`` and ``content`` keys.
+        component_type (str): Either ``"variables"`` or ``"arguments"``.
+        component (Optional[str]): Component name to use (auto-detected if
+            ``None``).
 
     Returns:
-        MDC component syntax string
+        str: MDC component syntax string.
     """
     if component is None:
         component = f"U{component_type.capitalize()}"
@@ -203,14 +217,14 @@ def create_navigation_entry(
     Create a navigation entry for Nuxt Content.
 
     Args:
-        title: Navigation title
-        path: Path to the page
-        icon: Optional icon name
-        badge: Optional badge text
-        description: Optional description
+        title (str): Navigation title.
+        path (str): Path to the page.
+        icon (Optional[str]): Optional icon name.
+        badge (Optional[str]): Optional badge text.
+        description (Optional[str]): Optional description.
 
     Returns:
-        Navigation entry dictionary
+        Dict[str, Any]: Navigation entry dictionary.
     """
     entry = {"title": title, "to": path}
 
@@ -229,11 +243,12 @@ def enhance_frontmatter_for_nuxt(frontmatter: Dict[str, Any], page_type: str = "
     Enhance frontmatter with Nuxt Content specific fields.
 
     Args:
-        frontmatter: Base frontmatter dictionary
-        page_type: Type of page (doc, guide, reference, example)
+        frontmatter (Dict[str, Any]): Base frontmatter dictionary.
+        page_type (str): Type of page (``"doc"``, ``"guide"``,
+            ``"reference"``, ``"example"``).
 
     Returns:
-        Enhanced frontmatter dictionary
+        Dict[str, Any]: Enhanced frontmatter dictionary.
     """
     enhanced = frontmatter.copy()
 
@@ -267,11 +282,11 @@ def generate_api_breadcrumbs(module_path: str, base_url: str = "/docs") -> List[
     Generate breadcrumb navigation for API documentation.
 
     Args:
-        module_path: Full module path (e.g., "mypackage.core.DataProcessor")
-        base_url: Base URL for the documentation
+        module_path (str): Full module path (e.g., ``"mypackage.core.DataProcessor"``).
+        base_url (str): Base URL for the documentation.
 
     Returns:
-        List of breadcrumb items
+        List[Dict[str, str]]: List of breadcrumb items.
     """
     breadcrumbs = []
 
@@ -295,10 +310,10 @@ def format_python_signature_for_mdc(signature: str) -> str:
     Format a Python function signature for better display in MDC.
 
     Args:
-        signature: Python function signature string
+        signature (str): Python function signature string.
 
     Returns:
-        Formatted signature with syntax highlighting
+        str: Formatted signature with syntax highlighting.
     """
     # Simple formatting - could be enhanced with more sophisticated parsing
     formatted = signature.replace("(", "(\n  ").replace(", ", ",\n  ").replace(")", "\n)")
@@ -311,10 +326,11 @@ def create_api_overview_table(classes: List[Dict[str, str]]) -> str:
     Create a table overview of API classes.
 
     Args:
-        classes: List of dicts with 'name', 'description', and optional 'link' keys
+        classes (List[Dict[str, str]]): List of dictionaries with ``name``,
+            ``description`` and optional ``link`` keys.
 
     Returns:
-        Markdown table string
+        str: Markdown table string.
     """
     if not classes:
         return ""
@@ -341,6 +357,14 @@ class NuxtContentHelper:
     """
 
     def __init__(self, base_url: str = "/docs", use_mdc: bool = True, mdc_components: Optional[Dict[str, str]] = None):
+        """Initialize the helper.
+
+        Args:
+            base_url (str): Base URL used when generating links.
+            use_mdc (bool): Whether to wrap sections with MDC components.
+            mdc_components (Optional[Dict[str, str]]): Optional mapping of
+                component types to custom MDC component names.
+        """
         self.base_url = base_url
         self.use_mdc = use_mdc
         # Default to Nuxt UI components
@@ -357,20 +381,52 @@ class NuxtContentHelper:
         }
 
     def get_component_name(self, component_type: str) -> str:
-        """Get the configured component name for a component type."""
+        """Get the configured component name for a component type.
+
+        Args:
+            component_type (str): The internal component key (e.g. ``"alert"``).
+
+        Returns:
+            str: The kebab-case name of the component to use.
+        """
         component = self.mdc_components.get(component_type, component_type)
         # Convert component name to kebab-case following MDC conventions
         return _convert_to_kebab_case(component)
 
     def wrap_with_mdc_if_enabled(self, content: str, component_type: str, props: str = "") -> str:
-        """Wrap content with MDC component if MDC is enabled."""
+        """Wrap content with an MDC component if enabled.
+
+        Args:
+            content (str): Markdown content to wrap.
+            component_type (str): Type of component to use from
+                ``mdc_components``.
+            props (str): Optional string of properties to pass to the
+                component.
+
+        Returns:
+            str: The original content wrapped with an MDC component if
+            ``use_mdc`` is ``True``; otherwise the content is returned
+            unchanged.
+        """
         if self.use_mdc:
             component_name = self.get_component_name(component_type)
             return f"::{component_name}{{{props}}}\n{content}\n::"
         return content
 
     def create_hero_section(self, title: str, description: str, links: Optional[List[Dict[str, str]]] = None) -> str:
-        """Create a hero section for documentation pages."""
+        """Create a hero section for documentation pages.
+
+        Args:
+            title (str): Title displayed in the hero section.
+            description (str): Introductory text for the section.
+            links (Optional[List[Dict[str, str]]]): Optional list of link
+                dictionaries. Each dictionary may contain ``label``, ``url`` and
+                ``variant`` keys.
+
+        Returns:
+            str: The rendered hero section in Markdown or MDC format depending
+            on ``use_mdc``.
+        """
         content = f"# {title}\n\n{description}\n"
 
         if links:
@@ -392,7 +448,16 @@ class NuxtContentHelper:
         return content
 
     def create_feature_list(self, features: List[Dict[str, str]]) -> str:
-        """Create a feature list section."""
+        """Create a feature list section.
+
+        Args:
+            features (List[Dict[str, str]]): A list of feature dictionaries
+                containing ``title``, ``description`` and optionally ``icon``
+                keys.
+
+        Returns:
+            str: Markdown or MDC formatted feature list depending on ``use_mdc``.
+        """
         if not features:
             return ""
 
@@ -412,7 +477,15 @@ class NuxtContentHelper:
         return content.strip()
 
     def create_variables_section(self, variables: List[Dict[str, str]]) -> str:
-        """Create a variables section using configured component."""
+        """Create a variables section using the configured component.
+
+        Args:
+            variables (List[Dict[str, str]]): A list of dictionaries defining
+                variables with ``name``, ``type`` and ``content`` keys.
+
+        Returns:
+            str: A Markdown or MDC formatted variables section.
+        """
         if not variables:
             return ""
 
@@ -432,7 +505,15 @@ class NuxtContentHelper:
             return content
 
     def create_arguments_section(self, arguments: List[Dict[str, str]]) -> str:
-        """Create an arguments section using configured component."""
+        """Create an arguments section using the configured component.
+
+        Args:
+            arguments (List[Dict[str, str]]): List of argument dictionaries
+                containing ``name``, ``type`` and ``content`` keys.
+
+        Returns:
+            str: A Markdown or MDC formatted arguments section.
+        """
         if not arguments:
             return ""
 
