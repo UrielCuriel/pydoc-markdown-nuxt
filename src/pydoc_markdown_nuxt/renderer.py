@@ -97,7 +97,16 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         self._maybe_render_docstring(fp, obj)
 
     def _maybe_render_source(self, fp: t.TextIO, obj: docspec.ApiObject, render_view_source: bool, position: str):
-        """Helper to render source link before or after signature."""
+        """Render the source link before or after the signature.
+
+        Args:
+            fp (t.TextIO): File-like object where the output is written.
+            obj (docspec.ApiObject): API object being rendered.
+            render_view_source (bool): Whether the source link should be
+                rendered.
+            position (str): Either ``"before signature"`` or
+                ``"after signature"``.
+        """
         if not render_view_source:
             return
         url = self.source_linker.get_source_url(obj) if self.source_linker else None
@@ -106,7 +115,13 @@ class MDCMarkdownRenderer(MarkdownRenderer):
             fp.write(source_string + "\n\n")
 
     def _maybe_render_docstring(self, fp: t.TextIO, obj: docspec.ApiObject):
-        """Helper to process and render docstring."""
+        """Process and render an object's docstring.
+
+        Args:
+            fp (t.TextIO): File-like object where the output is written.
+            obj (docspec.ApiObject): API object whose docstring is being
+                rendered.
+        """
         if not obj.docstring:
             return
         docstring_content = obj.docstring.content
@@ -121,7 +136,15 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         fp.write("\n\n")
 
     def _process_docstring_for_mdc(self, docstring: str) -> str:
-        """Process docstring to convert various sections to MDC components."""
+        """Convert conventional docstring sections to MDC components.
+
+        Args:
+            docstring (str): Raw docstring text.
+
+        Returns:
+            The transformed docstring where supported sections are replaced with
+            MDC components.
+        """
 
         # Process in order of specificity
         processed = docstring
@@ -150,7 +173,15 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         return processed
 
     def _convert_code_blocks_to_mdc(self, docstring: str) -> str:
-        """Convert multiple code blocks to MDC code groups."""
+        """Convert multiple code blocks to an MDC code group.
+
+        Args:
+            docstring (str): The docstring text to process.
+
+        Returns:
+            The docstring with consecutive code blocks replaced by a single MDC
+            code group component when applicable.
+        """
         import re
 
         # Pattern to match multiple consecutive code blocks
@@ -214,7 +245,17 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         return result
 
     def _convert_section_to_mdc(self, docstring: str, section_name: str, component_key: str) -> str:
-        """Convert a docstring section with list items to MDC component."""
+        """Convert a docstring section with list items to an MDC component.
+
+        Args:
+            docstring (str): The docstring text to search in.
+            section_name (str): Name of the section (e.g. ``"Arguments"``).
+            component_key (str): Key used to look up the MDC component name.
+
+        Returns:
+            The docstring with the specified section replaced by an MDC
+            component if it contains items.
+        """
         import re
 
         # Pattern to match sections like **Arguments**: with list items
@@ -258,7 +299,15 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         return re.sub(pattern, replace_section, docstring, flags=re.MULTILINE)
 
     def _convert_returns_to_mdc(self, docstring: str) -> str:
-        """Convert Returns sections to MDC components."""
+        """Convert ``Returns`` sections to MDC components.
+
+        Args:
+            docstring (str): Docstring text to transform.
+
+        Returns:
+            The docstring with ``Returns`` sections wrapped in the configured
+            MDC component.
+        """
         import re
 
         # Pattern to match **Returns**: sections
@@ -274,7 +323,15 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         return re.sub(pattern, replace_returns, docstring, flags=re.DOTALL)
 
     def _convert_examples_to_mdc(self, docstring: str) -> str:
-        """Convert Examples sections to MDC code groups."""
+        """Convert ``Examples`` sections to MDC code groups.
+
+        Args:
+            docstring (str): Docstring text to transform.
+
+        Returns:
+            The docstring with ``Examples`` sections converted to MDC code group
+            components when code blocks are detected.
+        """
         import re
 
         # Pattern to match **Examples**: sections that contain code
@@ -303,7 +360,15 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         return re.sub(pattern, replace_examples, docstring, flags=re.DOTALL)
 
     def _convert_notes_to_mdc(self, docstring: str) -> str:
-        """Convert Notes sections to alert components."""
+        """Convert ``Notes`` sections to alert components.
+
+        Args:
+            docstring (str): Docstring text to transform.
+
+        Returns:
+            The docstring where ``Notes`` sections are replaced by MDC alert
+            components.
+        """
         import re
 
         pattern = r"\*\*Notes?\*\*:\s*\n\n(.*?)(?=\n\n\*\*|\Z)"
@@ -316,7 +381,15 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         return re.sub(pattern, replace_notes, docstring, flags=re.DOTALL)
 
     def _convert_warnings_to_mdc(self, docstring: str) -> str:
-        """Convert Warnings sections to alert components."""
+        """Convert ``Warnings`` sections to alert components.
+
+        Args:
+            docstring (str): Docstring text to transform.
+
+        Returns:
+            The docstring where ``Warnings`` sections are replaced by MDC alert
+            components.
+        """
         import re
 
         pattern = r"\*\*Warnings?\*\*:\s*\n\n(.*?)(?=\n\n\*\*|\Z)"
@@ -329,7 +402,15 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         return re.sub(pattern, replace_warnings, docstring, flags=re.DOTALL)
 
     def _convert_raises_to_mdc(self, docstring: str) -> str:
-        """Convert Raises sections to callout components."""
+        """Convert ``Raises`` sections to callout components.
+
+        Args:
+            docstring (str): Docstring text to transform.
+
+        Returns:
+            The docstring where ``Raises`` sections are replaced with MDC callout
+            components summarizing the exceptions raised.
+        """
         import re
 
         pattern = r"\*\*Raises\*\*:\s*\n\n(.*?)(?=\n\n\*\*|\Z)"
@@ -359,7 +440,15 @@ class MDCMarkdownRenderer(MarkdownRenderer):
         return re.sub(pattern, replace_raises, docstring, flags=re.DOTALL)
 
     def _convert_arguments_to_mdc(self, docstring: str) -> str:
-        """Convert Arguments sections to MDC components."""
+        """Convert ``Arguments`` sections to MDC components.
+
+        Args:
+            docstring (str): Docstring text to transform.
+
+        Returns:
+            The docstring with ``Arguments`` sections converted to the
+            configured MDC component.
+        """
         return self._convert_section_to_mdc(docstring, "Arguments", "arguments")
 
 
@@ -377,7 +466,8 @@ class NuxtContentResolver(MarkdownReferenceResolver):
         Initialize the resolver.
 
         Args:
-            base_path: The base URL path for the API documentation (e.g., '/docs/api')
+            base_path (str): The base URL path for the API documentation
+                (e.g., ``'/docs/api'``)
         """
         self.base_path = base_path.strip("/")
 
@@ -402,8 +492,9 @@ class NuxtContentResolver(MarkdownReferenceResolver):
         Resolve a reference to a Markdown file path for Nuxt Content.
 
         Args:
-            scope: The current API object scope.
-            ref: The reference string (e.g., 'my.module.MyClass' or a relative reference).
+            scope (docspec.ApiObject): The current API object scope.
+            ref (str): The reference string (e.g., ``'my.module.MyClass'`` or a
+                relative reference).
 
         Returns:
             The resolved path for Nuxt Content (e.g., '/docs/api/my/module/myclass').
@@ -533,7 +624,14 @@ class NuxtRenderer(Renderer):
         self.markdown.init(context)
 
     def _render_page(self, modules: t.List[docspec.Module], page: NuxtPage, filename: str) -> None:
-        """Render a single page to a file."""
+        """Render a single page to a Markdown file.
+
+        Args:
+            modules (t.List[docspec.Module]): List of modules available for
+                rendering.
+            page (NuxtPage): Page configuration describing what to render.
+            filename (str): Destination file path.
+        """
 
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         frontmatter = self._build_frontmatter(modules, page)
@@ -545,7 +643,15 @@ class NuxtRenderer(Renderer):
         self._write_page_file(filename, frontmatter, content)
 
     def _read_source_content(self, page: NuxtPage) -> str:
-        """Read the source file content if specified."""
+        """Read the content of ``page.source`` if specified.
+
+        Args:
+            page (NuxtPage): Page configuration.
+
+        Returns:
+            The text from the source file or an empty string if it does not
+            exist.
+        """
         page_source = getattr(page, "source", None)
         if page_source is not None:
             source_path = Path(self._context.directory) / page_source
@@ -556,7 +662,15 @@ class NuxtRenderer(Renderer):
         return ""
 
     def _render_api_content(self, modules: t.List[docspec.Module], page: NuxtPage) -> str:
-        """Render API objects for the page."""
+        """Render API objects configured in the page.
+
+        Args:
+            modules (t.List[docspec.Module]): Available modules.
+            page (NuxtPage): Page configuration.
+
+        Returns:
+            Rendered Markdown for the API objects contained in the page.
+        """
         import io
 
         with io.StringIO() as buffer:
@@ -565,7 +679,13 @@ class NuxtRenderer(Renderer):
             return buffer.getvalue()
 
     def _render_page_contents(self, buffer: t.TextIO, modules: t.List[docspec.Module], contents: t.List[str]) -> None:
-        """Helper to render page contents."""
+        """Render the API objects listed in ``contents``.
+
+        Args:
+            buffer (t.TextIO): Buffer to write to.
+            modules (t.List[docspec.Module]): Available modules.
+            contents (t.List[str]): List of module names to render.
+        """
         for content_name in contents:
             module = self._find_module_by_name(modules, content_name)
             if module:
@@ -573,25 +693,53 @@ class NuxtRenderer(Renderer):
                 self._render_module_members(buffer, module)
 
     def _find_module_by_name(self, modules: t.List[docspec.Module], name: str) -> t.Optional[docspec.Module]:
-        """Helper to find a module by name."""
+        """Find a module by name.
+
+        Args:
+            modules (t.List[docspec.Module]): List of modules to search.
+            name (str): Name of the module.
+
+        Returns:
+            The matching module or ``None`` if not found.
+        """
         for module in modules:
             if module.name == name:
                 return module
         return None
 
     def _render_module_members(self, buffer: t.TextIO, module: docspec.Module) -> None:
-        """Helper to render module members."""
+        """Render all members of a module.
+
+        Args:
+            buffer (t.TextIO): Buffer to write to.
+            module (docspec.Module): Module whose members will be rendered.
+        """
         for member in module.members:
             self.markdown._render_object(buffer, 2, member)
 
     def _combine_content(self, source_content: str, api_content: str) -> str:
-        """Combine source and API content."""
+        """Combine source markdown with rendered API documentation.
+
+        Args:
+            source_content (str): Markdown from an external file.
+            api_content (str): Markdown generated from API objects.
+
+        Returns:
+            The combined Markdown content.
+        """
         if source_content and api_content:
             return source_content + "\n\n" + api_content
         return source_content or api_content
 
     def _write_page_file(self, filename: str, frontmatter: t.Dict[str, t.Any], content: str) -> None:
-        """Write the page file with frontmatter and content."""
+        """Write a Markdown file including YAML frontmatter.
+
+        Args:
+            filename (str): Destination path for the file.
+            frontmatter (t.Dict[str, t.Any]): Dictionary of frontmatter
+                values.
+            content (str): Rendered Markdown content.
+        """
         with open(filename, "w", encoding="utf8") as fp:
             fp.write("---\n")
             fp.write(str(yaml.safe_dump(frontmatter, default_flow_style=False, allow_unicode=True)))
@@ -599,7 +747,16 @@ class NuxtRenderer(Renderer):
             fp.write(content)
 
     def _build_frontmatter(self, modules: t.List[docspec.Module], page: NuxtPage) -> t.Dict[str, t.Any]:
-        """Helper to build the frontmatter dictionary for a page."""
+        """Assemble the frontmatter dictionary for a page.
+
+        Args:
+            modules (t.List[docspec.Module]): List of modules available to
+                render.
+            page (NuxtPage): Page configuration being processed.
+
+        Returns:
+            The merged frontmatter dictionary.
+        """
         frontmatter = {**self.default_frontmatter, **page.frontmatter}
         primary_object = modules[0] if len(modules) == 1 else None
 
@@ -631,6 +788,16 @@ class NuxtRenderer(Renderer):
         frontmatter: t.Dict[str, t.Any],
         primary_object: t.Optional[docspec.ApiObject],
     ) -> bool:
+        """Check if a description should be added to frontmatter.
+
+        Args:
+            frontmatter (t.Dict[str, t.Any]): Frontmatter being generated.
+            primary_object (t.Optional[docspec.ApiObject]): Primary API object
+                used for the page.
+
+        Returns:
+            ``True`` if a description should be derived from ``primary_object``.
+        """
         return bool(
             "description" not in frontmatter
             and primary_object
@@ -641,6 +808,17 @@ class NuxtRenderer(Renderer):
     def _build_navigation(
         self, frontmatter: t.Dict[str, t.Any], primary_object: t.Optional[docspec.ApiObject]
     ) -> t.Dict[str, t.Any]:
+        """Build the navigation dictionary for a page.
+
+        Args:
+            frontmatter (t.Dict[str, t.Any]): The frontmatter collected so
+                far.
+            primary_object (t.Optional[docspec.ApiObject]): Primary API object
+                rendered on the page, if any.
+
+        Returns:
+            A navigation dictionary suitable for Nuxt Content.
+        """
         navigation_value = frontmatter.get("navigation", {})
         if isinstance(navigation_value, bool):
             # If navigation is True, create a default navigation dict
@@ -659,6 +837,7 @@ class NuxtRenderer(Renderer):
         return navigation
 
     def _get_icon_key(self, primary_object: t.Optional[docspec.ApiObject]) -> str:
+        """Return the icon key for a given API object."""
         if not primary_object:
             return "page"
         if isinstance(primary_object, docspec.Module):
@@ -685,7 +864,12 @@ class NuxtRenderer(Renderer):
             self._render_all_pages(modules, known_files)
 
     def _cleanup_files(self, known_files: KnownFiles) -> None:
-        """Remove previously generated files."""
+        """Remove previously generated files.
+
+        Args:
+            known_files (KnownFiles): Tracker object containing files from the
+                last render.
+        """
         for file_ in known_files.load():
             try:
                 os.remove(file_.name)
@@ -694,7 +878,15 @@ class NuxtRenderer(Renderer):
                 pass
 
     def _get_page_filename(self, item, page):
-        """Helper to determine the filename for a page."""
+        """Determine the output filename for a page.
+
+        Args:
+            item: Page tree node.
+            page (NuxtPage): Page configuration.
+
+        Returns:
+            Full path to the output file.
+        """
         if hasattr(page, "directory") and page.directory:
             directory = os.path.join(self.content_directory, page.directory)
             name = page.name if page.name is not None else "index"
@@ -705,7 +897,13 @@ class NuxtRenderer(Renderer):
             return os.path.join(self.content_directory, name + page.extension)
 
     def _render_all_pages(self, modules: t.List[docspec.Module], known_files: KnownFiles) -> None:
-        """Render all pages and track known files."""
+        """Render all configured pages and track generated files.
+
+        Args:
+            modules (t.List[docspec.Module]): List of modules available for
+                rendering.
+            known_files (KnownFiles): Tracker object for generated files.
+        """
         for item in self.pages.iter_hierarchy():
             page = item.page
             filename = self._get_page_filename(item, page)
@@ -715,7 +913,14 @@ class NuxtRenderer(Renderer):
                 logger.info(f"Rendered {filename}")
 
     def get_resolver(self, modules: t.List[docspec.Module]) -> t.Optional[Resolver]:
-        """Get a resolver for cross-references."""
+        """Return a resolver for cross-references.
+
+        Args:
+            modules (t.List[docspec.Module]): Modules that will be rendered.
+
+        Returns:
+            Resolver instance for translating API references to URLs.
+        """
 
         # Determine the base path for URLs, removing the root "content" directory.
         # e.g., if content_directory is "content/docs/api", base_path becomes "docs/api"
