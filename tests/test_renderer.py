@@ -1,7 +1,7 @@
 import docspec
 import pytest
 
-from pydoc_markdown_nuxt.renderer import CustomizedMarkdownRenderer, NuxtRenderer
+from pydoc_markdown_nuxt.renderer import NuxtMarkdownRenderer, NuxtRenderer
 
 
 def make_location(filename):
@@ -100,14 +100,16 @@ def test_render_creates_module_and_member_files(temp_content_dir, monkeypatch):
     assert set(member_names) == {"MyClass", "my_function"}
 
 
-def test_customized_markdown_renderer_templates():
-    renderer = CustomizedMarkdownRenderer()
-    module_header = renderer.render_module_header_template.format(module_name="foo")
-    member_header = renderer.render_member_header_template.format(member_name="Bar")
-    assert "title: 'foo'" in module_header
-    assert "API reference for the foo module." in module_header
-    assert "title: 'Bar'" in member_header
-    assert "API reference for Bar." in member_header
+def test_nuxt_markdown_renderer_templates():
+    renderer = NuxtMarkdownRenderer()
+    # Test that the templates are properly defined
+    assert "title: '{{ title }}'" in renderer.module_frontmatter_template
+    assert "description: '{{ description }}'" in renderer.module_frontmatter_template
+    assert "navigation:" in renderer.module_frontmatter_template
+
+    assert "::reference-header" in renderer.member_header_template
+    assert "type: '{{ object_type }}'" in renderer.member_header_template
+    assert "icon: '{{ icon }}'" in renderer.member_header_template
 
 
 def test_init_calls_markdown_init(monkeypatch):
