@@ -32,8 +32,7 @@ dependencies = [
     "pydoc-markdown>=4.8.2",
     
     
-    "PyYAML>=5.0",
-    "twine>=6.1.0",
+    "PyYAML>=5.0"
 ]
 
 [project.entry-points."pydoc_markdown.interfaces.Renderer"]
