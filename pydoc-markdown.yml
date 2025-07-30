@@ -1,0 +1,19 @@
+# Complete example pydoc-markdown configuration for Nuxt Content
+# This demonstrates all features of pydoc-markdown-nuxt
+
+loaders:
+  - type: python
+    search_path: [src]
+
+processors:
+  - type: filter
+    expression: not name.startswith('_')
+  - type: filter
+    expression: not name.startswith('test_')
+  - type: smart
+  - type: crossref
+
+renderer:
+  type: nuxt
+  content_dir: docs/content
+  output_dir: 3.references

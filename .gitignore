@@ -69,3 +69,7 @@ cython_debug/
 
 # VS Code
 .vscode/
+
+
+#UV lock files
+*uv

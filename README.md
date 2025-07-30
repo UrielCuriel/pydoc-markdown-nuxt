@@ -29,16 +29,16 @@ loaders:
   - type: python
     search_path: [src]
 
-renderers:
-  - type: nuxt
-    content_directory: content/docs
-    default_frontmatter:
-      layout: docs
-      navigation: true
-    pages:
-      - title: API Documentation
-        contents:
-          - '*'
+processors:
+  - type: filter
+    expression: not name.startswith('_')
+  - type: smart
+  - type: crossref
+
+renderer:
+  type: nuxt
+  content_dir: docs/content
+  output_dir: 3.references
 ```
 
 Then run:
@@ -47,25 +47,35 @@ Then run:
 pydoc-markdown
 ```
 
-This will generate Nuxt Content compatible Markdown files in the `content/docs` directory.
+This will generate Nuxt Content compatible Markdown files in the `docs/content/3.references` directory with a hierarchical structure based on your Python modules.
 
 ## Configuration
 
 ### Basic Options
 
-- `content_directory`: Directory where content files are generated (default: `content`)
-- `clean_render`: Whether to clean previous files before rendering (default: `true`)
-- `default_frontmatter`: Default YAML frontmatter applied to all pages
-- `use_mdc`: Enable MDC syntax features (default: `true`)
-- `base_url`: Base URL for documentation (default: `/`)
+- `content_dir`: Directory where content files are generated (default: `content`)
+- `output_dir`: Subdirectory within content_dir where the rendered files will be placed (default: `references`)
 
-### Page Configuration
+The renderer uses the `NuxtMarkdownRenderer` internally which provides additional customization options:
 
-Pages support all standard pydoc-markdown page options plus:
+- `insert_header_anchors`: Whether to insert anchors in headers (default: `false`)
+- `escape_html_in_docstring`: Whether to escape HTML in docstrings (default: `true`)
+- `object_icons`: Dictionary mapping object types to icon classes
+- `module_frontmatter_template`: Jinja2 template for module frontmatter
+- `member_header_template`: Jinja2 template for member headers
 
-- `frontmatter`: Custom YAML frontmatter for the page
-- `directory`: Custom subdirectory for the page
-- `extension`: File extension (default: `.md`)
+### Directory Structure
+
+The renderer generates a hierarchical directory structure based on your Python modules:
+
+```
+content/
+└── {output_dir}/
+    └── {module_name}/
+        ├── .navigation.yml
+        ├── index.md
+        └── {submodules}/
+```
 
 ### Example Configuration
 
@@ -77,70 +87,77 @@ loaders:
 processors:
   - type: filter
     expression: not name.startswith('_')
+  - type: filter
+    expression: not name.startswith('test_')
   - type: smart
   - type: crossref
 
-renderers:
-  - type: nuxt
-    content_directory: content/docs
-    use_mdc: true
-    base_url: /docs/
-    default_frontmatter:
-      layout: docs
-      navigation: true
-      sidebar: true
-    pages:
-      - title: Home
-        name: index
-        source: README.md
-        frontmatter:
-          description: "Welcome to our API documentation"
-          icon: "home"
-      - title: Getting Started
-        name: getting-started
-        source: docs/getting-started.md
-        frontmatter:
-          description: "Quick start guide"
-          icon: "rocket"
-      - title: API Reference
-        name: api
-        directory: reference
-        frontmatter:
-          description: "Complete API reference"
-          icon: "code"
-        contents:
-          - mypackage.*
+renderer:
+  type: nuxt
+  content_dir: docs/content
+  output_dir: 3.references
 ```
 
 ## Generated Output
 
-The renderer generates Markdown files with YAML frontmatter:
+The renderer generates Markdown files with YAML frontmatter following Nuxt Content structure:
 
+### Module Files (`index.md`)
 ```markdown
 ---
-title: API Documentation
-layout: docs
-navigation: true
-description: Complete API reference
-icon: code
+title: 'module_name'
+description: 'Module description from docstring'
+navigation:
+    title: 'module_name'
+    icon: 'i-codicon-library'
 ---
 
-# MyClass
+# Module Documentation
 
-A sample class for demonstration.
+Module docstring content here...
+```
 
-## Methods
+### Class/Function Files (with MDC components)
+```markdown
+## MyClass
 
-### my_method(param1, param2='default')
+::reference-header
+---
+description: >
+    A sample class for demonstration.
+lang: 'python'
+type: 'class'
+navigation:
+    title: 'MyClass'
+    icon: 'i-codicon-symbol-class'
+    level: 1
+---
+::
 
-A sample method that does something useful.
+Class docstring content...
 
-**Arguments:**
-- `param1`: First parameter
-- `param2`: Second parameter with default value
+### my_method
 
-**Returns:**
-Something useful
+::reference-header
+---
+description: >
+    A sample method that does something useful.
+lang: 'python'
+type: 'method'
+navigation:
+    title: 'my_method'
+    icon: 'i-codicon-symbol-method-arrow'
+    level: 2
+---
+::
+
+Method docstring content...
+```
+
+### Navigation Files (`.navigation.yml`)
+```yaml
+title: "module_name"
+icon: "i-codicon-library"
 ```
 
 ## Integration with Nuxt Content
@@ -148,27 +165,32 @@ Something useful
 The generated files work seamlessly with Nuxt Content:
 
 1. **File-based Routing**: Files in `content/` automatically become pages
-2. **Navigation**: Use frontmatter to control navigation appearance
-3. **Layouts**: Specify custom layouts through frontmatter
-4. **Metadata**: Rich metadata support for SEO and organization
+2. **Hierarchical Navigation**: Automatic navigation based on directory structure
+3. **Navigation Files**: `.navigation.yml` files control sidebar appearance
+4. **MDC Components**: Uses `::reference-header` component for rich documentation display
+5. **Icon Support**: Integrated with Iconify for consistent iconography
 
-## MDC Support
+## MDC Components
 
-When `use_mdc: true`, the renderer is ready for MDC enhancements:
+The renderer uses custom MDC components for enhanced documentation:
 
 ```markdown
-::alert{type="info"}
-This is an info alert using MDC syntax
+::reference-header
+---
+description: >
+    Method or class description
+lang: 'python'
+type: 'method'
+typing: 'str'  # Optional type annotation
+navigation:
+    title: 'method_name'
+    icon: 'i-codicon-symbol-method'
+    level: 2
+---
 ::
+```
 
-::code-group
-```python
-# Python example
-def hello():
-    return "Hello, World!"
-```
-::
-```
+This allows for rich, interactive documentation with consistent styling across your API reference.
 
 ## Development
 
@@ -183,7 +205,13 @@ pip install -e .
 Run tests:
 
 ```bash
-python test_renderer.py
+pytest
+```
+
+Generate documentation for testing:
+
+```bash
+pydoc-markdown
 ```
 
 ## License

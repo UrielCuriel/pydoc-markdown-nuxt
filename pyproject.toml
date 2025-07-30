@@ -20,19 +20,19 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Framework :: Nuxt",
     "Topic :: Documentation",
     "Topic :: Software Development :: Documentation",
 ]
-authors = [{ name = "Uriel Curiel", email = "urielcuriel@outlook.com" }]
+authors = [{ name = "Uriel Curiel", email = "kratoz.00616@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.8"
-license = { text = "MIT" }
+license = { file = "LICENSE" }
 dependencies = [
     "pydoc-markdown>=4.8.2",
     "pytest>=8.3.5",
     "pytest-cov>=5.0.0",
     "PyYAML>=5.0",
+    "twine>=6.1.0",
 ]
 
 [project.entry-points."pydoc_markdown.interfaces.Renderer"]
