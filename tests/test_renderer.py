@@ -58,22 +58,13 @@ def test_render_creates_module_and_member_files(temp_content_dir, monkeypatch):
 
     renderer = NuxtRenderer(content_dir=str(temp_content_dir), output_dir="references")
 
-    single_page_calls = []
     object_calls = []
-
-    def fake_render_single_page(*args, **kwargs):
-        single_page_calls.append((args, kwargs))
-        # args[0] is the file pointer (fp)
-        fp = args[0]
-        fp.write("dummy")
 
     def fake_render_object(*args, **kwargs):
         object_calls.append((args, kwargs))
         # args[0] is the file pointer (fp)
         fp = args[0]
         fp.write("dummy")
-
-    monkeypatch.setattr(renderer.markdown, "render_single_page", fake_render_single_page)
     monkeypatch.setattr(renderer.markdown, "render_object", fake_render_object)
     renderer.markdown.encoding = "utf-8"
 
