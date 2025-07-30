@@ -1,6 +1,6 @@
 [project]
 name = "pydoc-markdown-nuxt"
-version = "0.1.1"
+version = "0.2.1"
 description = "A Nuxt.js renderer for pydoc-markdown that generates documentation compatible with Nuxt Content and MDC"
 keywords = [
     "pydoc-markdown",
